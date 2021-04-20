@@ -14,6 +14,7 @@ class FavoriteTableViewController: UITableViewController {
     var managedContext : NSManagedObjectContext!
     
     var favorites=[Countrys]()
+    var favoritesCD:[NSManagedObject]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,9 +34,9 @@ class FavoriteTableViewController: UITableViewController {
             }
             self.favorites=countries.countrys!
             
-//            DispatchQueue.main.async {
-//             self.tableView.reloadData()
-//            }
+            DispatchQueue.main.async {
+             self.tableView.reloadData()
+            }
          
             for item in self.favorites{
                 print(item.strLeague)}
@@ -98,6 +99,43 @@ class FavoriteTableViewController: UITableViewController {
         
         
     }
+    
+    func getFromApi(url:String) {
+        
+        SportsApiServies.instance.getCountries(url: "https://www.thesportsdb.com/api/v1/json/1/search_all_leagues.php?s=Soccer" )  { (countries, error) in
+        if let myError = error{
+            print(myError)
+        }else{
+            guard let countries = countries else {
+                return
+            }
+            self.favorites=countries.countrys!
+            
+            DispatchQueue.main.async {
+             self.tableView.reloadData()
+            }
+         
+            for item in self.favorites{
+                print(item.strLeague)}
+            }
+            
+        }
+        
+    }
+            
+            func getFromDB() {
+                let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
+                
+                    do{
+                        self.favoritesCD = try self.managedContext.fetch(fetch)
+                     print("fetch")
+                     
+                     
+                    }catch {
+                      print("un fetch")
+                    }
+                    self.tableView.reloadData()
+            }
     
     
     
