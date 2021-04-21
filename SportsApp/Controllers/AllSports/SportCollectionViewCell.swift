@@ -10,4 +10,8 @@ import UIKit
 
 class SportCollectionViewCell: UICollectionViewCell {
     
+
+    @IBOutlet weak var sportImgView: UIImageView!
+    
+    @IBOutlet weak var sportLblView: UILabel!
 }
