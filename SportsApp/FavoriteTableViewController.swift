@@ -13,7 +13,7 @@ import SDWebImage
 class FavoriteTableViewController: UITableViewController {
     var managedContext : NSManagedObjectContext!
     
-    var favorites=[Countrys]()
+    var favorites:[NSManagedObject]!
     var favoritesCD:[NSManagedObject]!
 
     override func viewDidLoad() {
@@ -24,31 +24,10 @@ class FavoriteTableViewController: UITableViewController {
                        
         managedContext = appDelegate.persistentContainer.viewContext
         
+        getFromDB()
         
-        SportsApiServies.instance.getCountries(url: "https://www.thesportsdb.com/api/v1/json/1/search_all_leagues.php?s=Soccer" )  { (countries, error) in
-        if let myError = error{
-            print(myError)
-        }else{
-            guard let countries = countries else {
-                return
-            }
-            self.favorites=countries.countrys!
-            
-            DispatchQueue.main.async {
-             self.tableView.reloadData()
-            }
-         
-            for item in self.favorites{
-                print(item.strLeague)}
         
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-    }
-        }
     }
 
     // MARK: - Table view data source
@@ -63,12 +42,32 @@ class FavoriteTableViewController: UITableViewController {
         return favorites.count
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 110;
+    }
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! FavoriteTableViewCell
-        cell.leagueStr.text = favorites[indexPath.row].strLeague!
+        cell.leagueStr.text = favorites[indexPath.row].value(forKey: "strLeague") as! String?
         
-        cell.leagueImg!.sd_setImage(with: URL(string:favorites[indexPath.row].strBadge!), placeholderImage: UIImage(named: "image.jpg"))
+        if case let cell.leagueImg=cell.leagueImg{
+            cell.leagueImg.sd_setImage(with: URL(string:favorites[indexPath.row].value(forKey: "strBadge") as! String), placeholderImage: UIImage(named: "placeholde"))
+            
+            cell.leagueImg.layer.cornerRadius = cell.leagueImg.frame.width / 2
+            cell.leagueImg.clipsToBounds = true
+        }
+        //cell.youtubeBtn.isHidden=true
+        
+        if(favorites[indexPath.row].value(forKey: "strYoutube") as! String?==nil || favorites[indexPath.row].value(forKey: "strYoutube") as! String?=="" ){
+            cell.youtubeBtn.isHidden=true
+        }else{
+            cell.youtubeBtn.isHidden=false
+        }
+        
+        cell.youtubeStr=favorites[indexPath.row].value(forKey: "strYoutube") as! String
+        
+        
         
         //cell.leagueImg.image = UIImage(named: "image.jpg")
         
@@ -100,34 +99,13 @@ class FavoriteTableViewController: UITableViewController {
         
     }
     
-    func getFromApi(url:String) {
-        
-        SportsApiServies.instance.getCountries(url: "https://www.thesportsdb.com/api/v1/json/1/search_all_leagues.php?s=Soccer" )  { (countries, error) in
-        if let myError = error{
-            print(myError)
-        }else{
-            guard let countries = countries else {
-                return
-            }
-            self.favorites=countries.countrys!
-            
-            DispatchQueue.main.async {
-             self.tableView.reloadData()
-            }
-         
-            for item in self.favorites{
-                print(item.strLeague)}
-            }
-            
-        }
-        
-    }
+
             
             func getFromDB() {
                 let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
                 
                     do{
-                        self.favoritesCD = try self.managedContext.fetch(fetch)
+                        self.favorites = try self.managedContext.fetch(fetch)
                      print("fetch")
                      
                      
@@ -196,4 +174,24 @@ class FavoriteTableViewController: UITableViewController {
     }
     */
 
+    
+    
+
+
+}
+
+
+
+extension UIImageView {
+  public func maskCircle(anyImage: UIImage) {
+    self.contentMode = UIView.ContentMode.scaleAspectFill
+    self.layer.cornerRadius = self.frame.height / 2
+    self.layer.masksToBounds = false
+    self.clipsToBounds = true
+
+   // make square(* must to make circle),
+   // resize(reduce the kilobyte) and
+   // fix rotation.
+   self.image = anyImage
+  }
 }
