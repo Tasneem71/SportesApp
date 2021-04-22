@@ -12,4 +12,7 @@ import Foundation
 struct URLs {
     
     public static var getLeagueURL : String = "https://www.thesportsdb.com/api/v1/json/1/search_all_leagues.php?s="
+    
+    
+     public static var getSportsURL : String = "https://www.thesportsdb.com/api/v1/json/1/all_sports.php"
 }

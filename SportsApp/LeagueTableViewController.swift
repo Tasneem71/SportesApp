@@ -9,12 +9,22 @@
 import UIKit
 
 class LeagueTableViewController: UITableViewController {
+    @IBOutlet weak var searchBar: UISearchBar!
+    
+    var sportName=""
+    var isFiltered=false
     
     var favorites=[Countrys]()
+    var filteredLeague=[Countrys]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.getLeaguesFromApi(sport: "Soccer")
+        self.navigationItem.title=""
+        self.getLeaguesFromApi(sport: sportName)
+        
+        searchBar.delegate=self
+        
+        
 
         
     }
@@ -28,7 +38,16 @@ class LeagueTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return favorites.count
+        
+//        if isFiltered {
+//            return filteredLeague.count
+//        }else{
+//                return favorites.count
+//        }
+        
+        return filteredLeague.count
+        
+        
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -38,23 +57,49 @@ class LeagueTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! FavoriteTableViewCell
-        cell.leagueStr.text = favorites[indexPath.row].strLeague!
         
-        if case let cell.leagueImg=cell.leagueImg{
-            cell.leagueImg.sd_setImage(with: URL(string:favorites[indexPath.row].strBadge!), placeholderImage: UIImage(named: "placeholde"))
+        //if isFiltered {
+            cell.leagueStr.text = filteredLeague[indexPath.row].strLeague!
             
-            cell.leagueImg.layer.cornerRadius = cell.leagueImg.frame.width / 2
-            cell.leagueImg.clipsToBounds = true
-        }
+            if case let cell.leagueImg=cell.leagueImg{
+                cell.leagueImg.sd_setImage(with: URL(string:filteredLeague[indexPath.row].strBadge!), placeholderImage: UIImage(named: "placeholde"))
+                
+                cell.leagueImg.layer.cornerRadius = cell.leagueImg.frame.width / 2
+                cell.leagueImg.clipsToBounds = true
+            }
+            
+            if(filteredLeague[indexPath.row].strYoutube!==nil || filteredLeague[indexPath.row].strYoutube!=="" ){
+                       cell.youtubeBtn.isHidden=true
+                   }else{
+                       cell.youtubeBtn.isHidden=false
+                   }
+                   
+                   cell.youtubeStr=filteredLeague[indexPath.row].strYoutube!
         
-        if(favorites[indexPath.row].strYoutube!==nil || favorites[indexPath.row].strYoutube!=="" ){
-                   cell.youtubeBtn.isHidden=true
-               }else{
-                   cell.youtubeBtn.isHidden=false
-               }
-               
-               cell.youtubeStr=favorites[indexPath.row].strYoutube!
         
+        
+        
+        /*}else{
+                cell.leagueStr.text = favorites[indexPath.row].strLeague!
+                
+                if case let cell.leagueImg=cell.leagueImg{
+                    cell.leagueImg.sd_setImage(with: URL(string:favorites[indexPath.row].strBadge!), placeholderImage: UIImage(named: "placeholde"))
+                    
+                    cell.leagueImg.layer.cornerRadius = cell.leagueImg.frame.width / 2
+                    cell.leagueImg.clipsToBounds = true
+                }
+                
+                if(favorites[indexPath.row].strYoutube!==nil || favorites[indexPath.row].strYoutube!=="" ){
+                           cell.youtubeBtn.isHidden=true
+                       }else{
+                           cell.youtubeBtn.isHidden=false
+                       }
+                       
+                       cell.youtubeStr=favorites[indexPath.row].strYoutube!
+        }*/
+        
+        
+
         
         //cell.leagueImg.image = UIImage(named: "image.jpg")
         
@@ -79,6 +124,7 @@ class LeagueTableViewController: UITableViewController {
             self.favorites=countries.countrys!
             
             DispatchQueue.main.async {
+                self.filteredLeague=self.favorites
              self.tableView.reloadData()
             }
          
@@ -91,4 +137,32 @@ class LeagueTableViewController: UITableViewController {
     }
 
 
+}
+
+extension LeagueTableViewController:UISearchBarDelegate{
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if(searchText.count==0){
+//            isFiltered=false
+//        }else{
+//            isFiltered=true
+            
+            filteredLeague = searchText.isEmpty ? favorites : favorites.filter({(dataString: Countrys) -> Bool in
+                   // If dataItem matches the searchText, return true to include it
+                return dataString.strLeague!.range(of: searchText, options: .caseInsensitive) != nil
+            
+//            for item in favorites {
+//                var rang:Range=item.strLeague?.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil)
+//            }
+                print("tasneem")
+            
+        })
+            
+            
+
+    //}
+        self.tableView.reloadData()
+    
+    }
+    
 }

@@ -47,4 +47,40 @@ class SportsApiServies{
             }
         }
     }
+    
+    
+    
+    
+    
+    func getSports(url:String,completion: @escaping (SportObj?,Error?)->Void){
+        
+        
+        
+        AF.request(url).responseJSON {(response) in
+            guard let data = response.data else{
+                return
+            }
+            switch response.result{
+
+            case .success(let val):
+                do{
+                   let sport = try JSONDecoder().decode(SportObj.self, from: data)
+
+                     completion(sport,nil)
+                }catch let jsonError{
+                    print(jsonError)
+                }
+
+            case .failure(let error):
+                completion(nil,error)
+                //clousure hwa function ezan lazem anadeha
+                //we 3ashan fih error f hakhaly el data el returned --> nil
+
+            }
+        }
+    }
+    
+    
+    
+    
 }
