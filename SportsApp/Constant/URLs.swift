@@ -15,4 +15,9 @@ struct URLs {
     
     
      public static var getSportsURL : String = "https://www.thesportsdb.com/api/v1/json/1/all_sports.php"
+    
+    public static var getLastEventsURL : String = "https://www.thesportsdb.com/api/v1/json/1/eventspastleague.php?id="
+    
+    public static var getUpcommingEventsURL : String = "https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id="
+    
 }
