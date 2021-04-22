@@ -2,7 +2,7 @@
 //  LeagueEventsViewController.swift
 //  SportsApp
 //
-//  Created by Esraa on 21/04/2021.
+//  Created by tasneem on 21/04/2021.
 //
 
 import UIKit
@@ -15,11 +15,10 @@ class LeagueEventsViewController: UIViewController {
     @IBOutlet weak var lastEventsTableView: UITableView!
     
     
-    var lastEventsArray = [DatumLastEvents]()
-    var upcommingEventsArray = [DatumLastEvents]()
     var lastEvents = [Events]()
-    let lastEventsViewModel = LeagueEventsViewModel()
-    var teams = [String]()
+    var upcommingEvents = [Events]()
+    var leagueTeams = [Teams]()
+    let leagueEventsViewModel = LeagueEventsViewModel()
 
 
 
@@ -32,55 +31,72 @@ class LeagueEventsViewController: UIViewController {
         lastEventsTableView.delegate=self
         lastEventsTableView.dataSource=self
         
-        lastEventsViewModel.fetchLastEventsDataFromAPI(leagueID: "4328")
+        
+        leagueEventsViewModel.fetchTeamsDataFromAPI(leagueID: "4328")
+        leagueEventsViewModel.fetchLastEventsDataFromAPI(leagueID: "4328")
+        leagueEventsViewModel.fetchUpcommingEventsDataFromAPI(leagueID: "4328")
         
         
-        lastEventsViewModel.bindLastEventsViewModelToView = {
+        leagueEventsViewModel.bindUpcommingEventsViewModelToView = {
                     
-            self.onSuccessUpdateView()
+            self.onUpcommingEventSuccessUpdateView()
             
         }
         
-        lastEventsViewModel.bindViewModelErrorToView = {
+        leagueEventsViewModel.bindLastEventsViewModelToView = {
+                    
+            self.onLastEventSuccessUpdateView()
+            
+        }
+        
+        leagueEventsViewModel.bindLeagueTeamsViewModelToView = {
+                    
+            self.onLeagueTeamsSuccessUpdateView()
+            
+        }
+        
+        
+        leagueEventsViewModel.bindViewModelErrorToView = {
                     
             self.onFailUpdateView()
             
         }
         
         
-        
-        
-        lastEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        lastEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa1", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        lastEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa2", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-
-        upcommingEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        upcommingEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa1", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        upcommingEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa2", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        upcommingEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        upcommingEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa1", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        upcommingEventsArray.append(DatumLastEvents(id: 1, employeeName: "esraa2", employeeSalary: 2, employeeAge: 3, profileImage: "placeholde"))
-        
-        teams.append("placeholde")
-        teams.append("placeholde")
-        teams.append("placeholde")
-        teams.append("placeholde")
-        teams.append("placeholde")
+    
     }
     
     
     
-    func onSuccessUpdateView(){
+    func onLastEventSuccessUpdateView(){
         
-        lastEvents = lastEventsViewModel.lastEvents.events!
+        lastEvents = leagueEventsViewModel.lastEvents.events!
         self.lastEventsTableView.reloadData()
         
     }
     
+    
+    func onUpcommingEventSuccessUpdateView(){
+        
+        upcommingEvents = leagueEventsViewModel.upcommingEvents.events!
+        self.upcommingCollectionView.reloadData()
+        
+    }
+    
+    func onLeagueTeamsSuccessUpdateView(){
+        
+        leagueTeams = leagueEventsViewModel.leagueTeams.teams!
+        self.teamsCollectionView.reloadData()
+        self.upcommingCollectionView.reloadData()
+        self.lastEventsTableView.reloadData()
+        
+    }
+    
+    
     func onFailUpdateView(){
         
        
-        let alert = UIAlertController(title: "Error", message: lastEventsViewModel.showError, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Error", message: leagueEventsViewModel.showError, preferredStyle: .alert)
         
         let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
             
@@ -109,9 +125,10 @@ extension LeagueEventsViewController : UITableViewDelegate , UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath) as! LastEventesTableViewCell
         cell.countLabelView1.text = lastEvents[indexPath.row].intHomeScore
         cell.countLabelView2.text = lastEvents[indexPath.row].intAwayScore
-        cell.imageView1.image = UIImage(named: "placeholde")
+        var pics=getTeamPic(teamOneId: lastEvents[indexPath.row].idHomeTeam!, teamTwoId: lastEvents[indexPath.row].idAwayTeam!, teams: leagueTeams)
+        cell.imageView1.sd_setImage(with: URL(string:pics[0]), placeholderImage: UIImage(named: "placeholde"))
         cell.view1.layer.cornerRadius = 20.0
-        cell.imageViw2.image = UIImage(named: "placeholde")
+        cell.imageViw2.sd_setImage(with: URL(string:pics[1]), placeholderImage: UIImage(named: "placeholde"))
         cell.view2.layer.cornerRadius = 20.0
         cell.dateLabelView.text=lastEvents[indexPath.row].dateEvent
         return cell
@@ -134,25 +151,31 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == upcommingCollectionView {
-            return upcommingEventsArray.count
+            return upcommingEvents.count
         }else{
-            return teams.count
+            return leagueTeams.count
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == upcommingCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellh1", for: indexPath as IndexPath) as! UpCommingCollectionViewCell
-            cell.labelCounter1.text = "2"
-            cell.labelCounter2.text = "3"
-            cell.imageView1.image = UIImage(named: "placeholde")
+            cell.labelCounter1.text = upcommingEvents[indexPath.row].intHomeScore
+            cell.labelCounter2.text = upcommingEvents[indexPath.row].intAwayScore
+            
+            
+            var pics=getTeamPic(teamOneId: upcommingEvents[indexPath.row].idHomeTeam!, teamTwoId: upcommingEvents[indexPath.row].idAwayTeam!, teams: leagueTeams)
+            
+            
+            cell.imageView1.sd_setImage(with: URL(string:pics[0]), placeholderImage: UIImage(named: "placeholde"))
             cell.view1.layer.cornerRadius = 20.0
-            cell.imageView2.image = UIImage(named: "placeholde")
+            cell.imageView2.sd_setImage(with: URL(string:pics[1]), placeholderImage: UIImage(named: "placeholde"))
             cell.view2.layer.cornerRadius = 20.0
+            cell.dateLabeel.text=upcommingEvents[indexPath.row].dateEvent
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellh2", for: indexPath as IndexPath) as! TeamsCollectionViewCell
-            cell.teamImageViw.image = UIImage(named: "placeholde")
+            cell.teamImageViw.sd_setImage(with: URL(string:leagueTeams[indexPath.row].strTeamBadge!), placeholderImage: UIImage(named: "placeholde"))
             cell.teamImageViw.layer.cornerRadius = cell.teamImageViw.frame.width / 2
             cell.teamImageViw.clipsToBounds = true
             return cell
@@ -172,4 +195,18 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
     
     
 }
+    
+    func getTeamPic(teamOneId:String,teamTwoId:String,teams:[Teams]) -> [String] {
+        var teamspics=["",""]
+        for item in teams{
+            if teamOneId==item.idTeam {
+                teamspics[0]=item.strTeamBadge!
+            }
+            if teamTwoId==item.idTeam {
+                teamspics[1]=item.strTeamBadge!
+            }
+        }
+        return teamspics
+    }
+    
 }

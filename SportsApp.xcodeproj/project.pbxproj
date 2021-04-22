@@ -15,6 +15,8 @@
 		961D4C492631FA9E00400991 /* LeagueEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961D4C482631FA9D00400991 /* LeagueEventsViewModel.swift */; };
 		961D4C4C263200D800400991 /* LastUpcommingEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961D4C4A263200D700400991 /* LastUpcommingEvents.swift */; };
 		961D4C4D263200D800400991 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961D4C4B263200D700400991 /* Events.swift */; };
+		961D4C522632274400400991 /* LeagueTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961D4C502632274400400991 /* LeagueTeams.swift */; };
+		961D4C532632274400400991 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961D4C512632274400400991 /* Teams.swift */; };
 		963406BA262E103900952BC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963406B9262E103900952BC8 /* AppDelegate.swift */; };
 		963406BC262E103900952BC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963406BB262E103900952BC8 /* SceneDelegate.swift */; };
 		963406BE262E103900952BC8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963406BD262E103900952BC8 /* ViewController.swift */; };
@@ -72,6 +74,8 @@
 		961D4C482631FA9D00400991 /* LeagueEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueEventsViewModel.swift; sourceTree = "<group>"; };
 		961D4C4A263200D700400991 /* LastUpcommingEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LastUpcommingEvents.swift; sourceTree = "<group>"; };
 		961D4C4B263200D700400991 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
+		961D4C502632274400400991 /* LeagueTeams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeagueTeams.swift; sourceTree = "<group>"; };
+		961D4C512632274400400991 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		963406B6262E103900952BC8 /* SportsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		963406B9262E103900952BC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		963406BB262E103900952BC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -179,6 +183,8 @@
 		963406B8262E103900952BC8 /* SportsApp */ = {
 			isa = PBXGroup;
 			children = (
+				961D4C502632274400400991 /* LeagueTeams.swift */,
+				961D4C512632274400400991 /* Teams.swift */,
 				961D4C4B263200D700400991 /* Events.swift */,
 				961D4C4A263200D700400991 /* LastUpcommingEvents.swift */,
 				961D4C472631FA6A00400991 /* ViewModels */,
@@ -491,6 +497,7 @@
 				961D4C462631C7FF00400991 /* LastEvents.swift in Sources */,
 				965CCFB9262F361B009D9D1D /* FavoriteTableViewController.swift in Sources */,
 				96D52F672630C74100DFF9AE /* SportCollectionViewCell.swift in Sources */,
+				961D4C522632274400400991 /* LeagueTeams.swift in Sources */,
 				961D4C442631C74F00400991 /* LeagueEventsViewController.swift in Sources */,
 				961D4C492631FA9E00400991 /* LeagueEventsViewModel.swift in Sources */,
 				961D4C412631C74F00400991 /* UpCommingCollectionViewCell.swift in Sources */,
@@ -505,6 +512,7 @@
 				961D4C432631C74F00400991 /* TeamsCollectionViewCell.swift in Sources */,
 				96E4BA5B262FA62800104A79 /* NetworkMonitor.swift in Sources */,
 				961D4C4C263200D800400991 /* LastUpcommingEvents.swift in Sources */,
+				961D4C532632274400400991 /* Teams.swift in Sources */,
 				96D52F692630CD4200DFF9AE /* SportObj.swift in Sources */,
 				961D4C422631C74F00400991 /* LastEventesTableViewCell.swift in Sources */,
 				963406BC262E103900952BC8 /* SceneDelegate.swift in Sources */,
