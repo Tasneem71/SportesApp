@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 import SDWebImage
-
+import Alamofire
 class FavoriteTableViewController: UITableViewController {
     var managedContext : NSManagedObjectContext!
     
@@ -87,6 +87,15 @@ class FavoriteTableViewController: UITableViewController {
         return indexPath
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+         if editingStyle == .delete {
+           print("Deleted")
+            removeFromDB(obj: favorites[indexPath.row])
+
+           self.favorites.remove(at: indexPath.row)
+           self.tableView.deleteRows(at: [indexPath], with: .automatic)
+         }
+       }
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -94,9 +103,22 @@ class FavoriteTableViewController: UITableViewController {
         vc.isFavorite=true
         vc.idLeague = self.idLeague
     }
-    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+     
+       if NetworkMonitor.shared.isConnected{
+        print("network exists")
+            return true
+        }else{
+        
+        onFailUpdateView()
+        print(" no network exists")
 
-            
+           return false
+        }
+        
+        
+       }
+    
             func getFromDB() {
                 let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
                 
@@ -111,6 +133,39 @@ class FavoriteTableViewController: UITableViewController {
                     self.tableView.reloadData()
             }
     
+    
+    func removeFromDB(obj:NSManagedObject) {
+       
+        let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
+                       
+            do{
+             var favorites = try self.managedContext.fetch(fetch)
+                    print("fetch")
+                            
+                for item in favorites {
+                    if item == obj {
+                    managedContext.delete(obj)
+                        
+                    }
+                    
+                }
+               try  managedContext.save()
+                            
+                           }catch {
+                             print("un fetch")
+                           }
+          
+    }
+    func onFailUpdateView(){
+           
+          
+           let alert = UIAlertController(title: "Alert", message: "No Internet Connection", preferredStyle: .alert)
+           
+           let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
+               
+               
+           }
+       }
     
     
     

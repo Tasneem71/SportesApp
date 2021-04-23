@@ -28,9 +28,12 @@ class LeagueEventsViewController: UIViewController {
     var leagueObj:Countrys?
     var isFavorite=false
     var idLeague=""
+    var isInCD = false
     
     var teamDetails:Teams?
     var managedContext : NSManagedObjectContext!
+    var favoritesCD:[NSManagedObject]!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,10 +63,15 @@ class LeagueEventsViewController: UIViewController {
             leagueEventsViewModel.fetchTeamsDataFromAPI(leagueID: (idLeague))
             leagueEventsViewModel.fetchLastEventsDataFromAPI(leagueID: (idLeague))
             leagueEventsViewModel.fetchUpcommingEventsDataFromAPI(leagueID: (idLeague))
+            
+
         }else{
         leagueEventsViewModel.fetchTeamsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
         leagueEventsViewModel.fetchLastEventsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
         leagueEventsViewModel.fetchUpcommingEventsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
+            
+            getFromDB(id: (leagueObj?.idLeague)!)
+            
         }
         
         leagueEventsViewModel.bindUpcommingEventsViewModelToView = {
@@ -90,12 +98,26 @@ class LeagueEventsViewController: UIViewController {
             self.onFailUpdateView()
             
         }
-        
-        
+      
+
+
+
     
     }
     
-    
+   override func viewWillAppear(_ animated: Bool) {
+    if isFavorite {
+             
+        favoriteBtn.tintColor = UIColor.red
+
+          }else{
+         
+              
+              getFromDB(id: (leagueObj?.idLeague)!)
+              
+          }
+           
+       }
     
     func onLastEventSuccessUpdateView(){
         
@@ -143,8 +165,10 @@ class LeagueEventsViewController: UIViewController {
     
     
     @IBAction func favoriteBtn(_ sender: Any) {
-        addToFavorite(leagueItem: leagueObj!)
-        favoriteBtn.tintColor=UIColor.red
+        if isFavorite == false && isInCD == false {
+            addToFavorite(leagueItem: leagueObj!)
+            favoriteBtn.tintColor=UIColor.red
+        }
         
     }
     
@@ -171,6 +195,31 @@ class LeagueEventsViewController: UIViewController {
     
     
     
+    
+
+    func getFromDB(id:String) {
+        let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
+        
+            do{
+                self.favoritesCD = try self.managedContext.fetch(fetch)
+                
+                for item in favoritesCD {
+                    
+                if item.value(forKey: "idLeague")as! String == id {
+                        isInCD = true
+                    favoriteBtn.tintColor = UIColor.red
+                    
+                    }
+                    
+                }
+             print("fetch")
+             
+             
+            }catch {
+              print("un fetch")
+            }
+           
+    }
     
     
 }
@@ -222,6 +271,8 @@ extension LeagueEventsViewController : UITableViewDelegate , UITableViewDataSour
     func numberOfSections(in tableView: UITableView) -> Int {
         1
     }
+    
+      
 }
 
 
