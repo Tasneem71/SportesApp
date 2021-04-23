@@ -24,7 +24,16 @@ class LeagueEventsViewModel: NSObject {
     var upcommingEvents :LastUpcommingEvents! {
         didSet{
             
-            self.bindLastEventsViewModelToView()
+            self.bindUpcommingEventsViewModelToView()
+        }
+        
+    }
+    
+    
+    var leagueTeams :LeagueTeams! {
+        didSet{
+            
+            self.bindLeagueTeamsViewModelToView()
         }
         
     }
@@ -39,7 +48,8 @@ class LeagueEventsViewModel: NSObject {
         
     }
     
-    
+    var bindUpcommingEventsViewModelToView : (()->()) = {}
+    var bindLeagueTeamsViewModelToView : (()->()) = {}
     var bindLastEventsViewModelToView : (()->()) = {}
     var bindViewModelErrorToView : (()->()) = {}
     
@@ -48,7 +58,6 @@ class LeagueEventsViewModel: NSObject {
         
         super .init()
         self.service = SportsApiServies()
-        //self.fetchLastEventsDataFromAPI()
     }
     
     
@@ -73,7 +82,7 @@ class LeagueEventsViewModel: NSObject {
     
     func fetchUpcommingEventsDataFromAPI (leagueID:String){
                 
-        service.getEvents(url: URLs.getUpcommingEventsURL+leagueID+"&r=10&s=2012-2021", completion: { (events, error) in
+        service.getEvents(url: URLs.getUpcommingEventsURL+leagueID+"&r=10&s=2020-2021", completion: { (events, error) in
             
             if let error : Error = error{
                 
@@ -82,7 +91,25 @@ class LeagueEventsViewModel: NSObject {
                 
             }else{
                 
-                self.lastEvents = events
+                self.upcommingEvents = events
+                
+            }
+           
+        })
+    }
+    
+    func fetchTeamsDataFromAPI (leagueID:String){
+                
+        service.getTeams(url: URLs.getTeamsURL+leagueID, completion: { (teams, error) in
+            
+            if let error : Error = error{
+                
+                let message = error.localizedDescription
+                self.showError = message
+                
+            }else{
+                
+                self.leagueTeams = teams
                 
             }
            
