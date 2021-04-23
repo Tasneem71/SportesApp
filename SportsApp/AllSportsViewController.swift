@@ -62,6 +62,8 @@ extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewD
 
     
     
+    
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }

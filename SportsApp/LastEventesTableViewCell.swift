@@ -16,6 +16,13 @@ class LastEventesTableViewCell: UITableViewCell {
     @IBOutlet weak var countLabelView1: UILabel!
     @IBOutlet weak var imageViw2: UIImageView!
     @IBOutlet weak var imageView1: UIImageView!
+    
+    @IBOutlet weak var eventLabel: UILabel!
+    @IBOutlet weak var homeTeamLabel: UILabel!
+    
+    
+    @IBOutlet weak var awayTeamLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -16,4 +16,9 @@ class UpCommingCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var view2: UIView!
     @IBOutlet weak var labelCounter2: UILabel!
     @IBOutlet weak var dateLabeel: UILabel!
+    
+    @IBOutlet weak var eventLabel: UILabel!
+    @IBOutlet weak var homeTeamLabel: UILabel!
+    
+    @IBOutlet weak var awayTeamLabel: UILabel!
 }

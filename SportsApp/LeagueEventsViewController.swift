@@ -7,6 +7,8 @@
 
 import UIKit
 
+import CoreData
+
 class LeagueEventsViewController: UIViewController {
     @IBOutlet weak var upcommingCollectionView: UICollectionView!
     
@@ -14,13 +16,19 @@ class LeagueEventsViewController: UIViewController {
     
     @IBOutlet weak var lastEventsTableView: UITableView!
     
+    @IBOutlet weak var scrollView: UIScrollView!
+
+    @IBOutlet weak var favoriteBtn: UIButton!
     
     var lastEvents = [Events]()
     var upcommingEvents = [Events]()
     var leagueTeams = [Teams]()
     let leagueEventsViewModel = LeagueEventsViewModel()
 
-
+    var leagueObj:Countrys?
+    
+    var teamDetails:Teams?
+    var managedContext : NSManagedObjectContext!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,13 +39,25 @@ class LeagueEventsViewController: UIViewController {
         lastEventsTableView.delegate=self
         lastEventsTableView.dataSource=self
         
+        let screenRect = UIScreen.main.bounds
+        let screenWidth = screenRect.size.width
+        let screenHeight = screenRect.size.height
+        self.scrollView.contentSize = CGSize(width: screenWidth, height: 970)
+        self.scrollView.frame = CGRect(x: 0, y: 70, width: screenWidth, height: screenHeight)
+        scrollView.backgroundColor = UIColor.clear
         
         
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                       
+        managedContext = appDelegate.persistentContainer.viewContext
         
         
-        leagueEventsViewModel.fetchTeamsDataFromAPI(leagueID: "4328")
-        leagueEventsViewModel.fetchLastEventsDataFromAPI(leagueID: "4328")
-        leagueEventsViewModel.fetchUpcommingEventsDataFromAPI(leagueID: "4328")
+        print(leagueObj?.idLeague)
+        
+        
+        leagueEventsViewModel.fetchTeamsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
+        leagueEventsViewModel.fetchLastEventsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
+        leagueEventsViewModel.fetchUpcommingEventsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
         
         
         leagueEventsViewModel.bindUpcommingEventsViewModelToView = {
@@ -81,14 +101,22 @@ class LeagueEventsViewController: UIViewController {
     
     func onUpcommingEventSuccessUpdateView(){
         
-        upcommingEvents = leagueEventsViewModel.upcommingEvents.events!
+        if let event = leagueEventsViewModel.upcommingEvents.events {
+            upcommingEvents = leagueEventsViewModel.upcommingEvents.events!
+        }
+        
+        
         self.upcommingCollectionView.reloadData()
         
     }
     
     func onLeagueTeamsSuccessUpdateView(){
         
-        leagueTeams = leagueEventsViewModel.leagueTeams.teams!
+        if let team = leagueEventsViewModel.leagueTeams.teams{
+            leagueTeams = leagueEventsViewModel.leagueTeams.teams!
+        }
+        
+        
         self.teamsCollectionView.reloadData()
         self.upcommingCollectionView.reloadData()
         self.lastEventsTableView.reloadData()
@@ -106,6 +134,35 @@ class LeagueEventsViewController: UIViewController {
             
         }
     }
+    
+    
+    @IBAction func favoriteBtn(_ sender: Any) {
+        addToFavorite(leagueItem: leagueObj!)
+        favoriteBtn.tintColor=UIColor.red
+        
+    }
+    
+   
+    
+    
+        func addToFavorite(leagueItem:Countrys) {
+            
+            
+            let entity = NSEntityDescription.entity(forEntityName: "Favorite", in: managedContext)
+                let favoriteItem = NSManagedObject(entity: entity!, insertInto: managedContext)
+            favoriteItem.setValue(leagueItem.idLeague!, forKey: "idLeague")
+            favoriteItem.setValue(leagueItem.strLeague!, forKey: "strLeague")
+                favoriteItem.setValue(leagueItem.strBadge!, forKey: "strBadge")
+                favoriteItem.setValue(leagueItem.strYoutube!, forKey: "strYoutube")
+                do{
+                    try managedContext.save()
+                }catch let error as NSError{
+                    print(error)
+                }
+            
+            
+        }
+    
     
     
     
@@ -128,12 +185,24 @@ extension LeagueEventsViewController : UITableViewDelegate , UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath) as! LastEventesTableViewCell
         cell.countLabelView1.text = lastEvents[indexPath.row].intHomeScore
         cell.countLabelView2.text = lastEvents[indexPath.row].intAwayScore
-        var pics=getTeamPic(teamOneId: lastEvents[indexPath.row].idHomeTeam!, teamTwoId: lastEvents[indexPath.row].idAwayTeam!, teams: leagueTeams)
-        cell.imageView1.sd_setImage(with: URL(string:pics[0]), placeholderImage: UIImage(named: "placeholde"))
+        
+        if let teamOne = lastEvents[indexPath.row].idHomeTeam {
+            var pics=getTeamPic(teamOneId: lastEvents[indexPath.row].idHomeTeam!, teamTwoId: lastEvents[indexPath.row].idAwayTeam!, teams: leagueTeams)
+            cell.imageView1.sd_setImage(with: URL(string:pics[0]), placeholderImage: UIImage(named: "placeholde"))
+            
+             cell.imageViw2.sd_setImage(with: URL(string:pics[1]), placeholderImage: UIImage(named: "placeholde"))
+        }
+        
+        
+        
+        
         cell.view1.layer.cornerRadius = 20.0
-        cell.imageViw2.sd_setImage(with: URL(string:pics[1]), placeholderImage: UIImage(named: "placeholde"))
+       
         cell.view2.layer.cornerRadius = 20.0
         cell.dateLabelView.text=lastEvents[indexPath.row].dateEvent
+        cell.homeTeamLabel.text=lastEvents[indexPath.row].strHomeTeam
+        cell.awayTeamLabel.text=lastEvents[indexPath.row].strAwayTeam
+        cell.eventLabel.text=lastEvents[indexPath.row].strEvent
         return cell
     }
 
@@ -175,6 +244,12 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
             cell.imageView2.sd_setImage(with: URL(string:pics[1]), placeholderImage: UIImage(named: "placeholde"))
             cell.view2.layer.cornerRadius = 20.0
             cell.dateLabeel.text=upcommingEvents[indexPath.row].dateEvent
+            
+            cell.homeTeamLabel.text=upcommingEvents[indexPath.row].strHomeTeam
+            cell.awayTeamLabel.text=upcommingEvents[indexPath.row].strAwayTeam
+            cell.eventLabel.text=upcommingEvents[indexPath.row].strEvent
+            
+            
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellh2", for: indexPath as IndexPath) as! TeamsCollectionViewCell
@@ -198,6 +273,22 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
     
     
 }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        
+        teamDetails=leagueTeams[indexPath.row]
+        
+        return true
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc : TeamDetailsViewController = segue.destination as! TeamDetailsViewController
+        vc.team = self.teamDetails
+        //print("prepatre"+(leagueObj?.idLeague)!)
+    }
+    
+    
     
     func getTeamPic(teamOneId:String,teamTwoId:String,teams:[Teams]) -> [String] {
         var teamspics=["",""]

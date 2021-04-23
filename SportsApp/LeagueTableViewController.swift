@@ -17,6 +17,8 @@ class LeagueTableViewController: UITableViewController {
     var favorites=[Countrys]()
     var filteredLeague=[Countrys]()
     
+    var leagueObj:Countrys?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title=""
@@ -61,50 +63,50 @@ class LeagueTableViewController: UITableViewController {
         //if isFiltered {
             cell.leagueStr.text = filteredLeague[indexPath.row].strLeague!
             
-            if case let cell.leagueImg=cell.leagueImg{
+            if  let image = filteredLeague[indexPath.row].strBadge{
                 cell.leagueImg.sd_setImage(with: URL(string:filteredLeague[indexPath.row].strBadge!), placeholderImage: UIImage(named: "placeholde"))
                 
                 cell.leagueImg.layer.cornerRadius = cell.leagueImg.frame.width / 2
                 cell.leagueImg.clipsToBounds = true
             }
+        
+        
+        if let youtube = filteredLeague[indexPath.row].strYoutube {
             
             if(filteredLeague[indexPath.row].strYoutube!==nil || filteredLeague[indexPath.row].strYoutube!=="" ){
-                       cell.youtubeBtn.isHidden=true
-                   }else{
-                       cell.youtubeBtn.isHidden=false
-                   }
-                   
-                   cell.youtubeStr=filteredLeague[indexPath.row].strYoutube!
+                cell.youtubeBtn.isHidden=true
+            }else{
+                cell.youtubeBtn.isHidden=false
+            }
+            
+            cell.youtubeStr=filteredLeague[indexPath.row].strYoutube!
+            
+        }
+            
+            
         
         
         
         
-        /*}else{
-                cell.leagueStr.text = favorites[indexPath.row].strLeague!
-                
-                if case let cell.leagueImg=cell.leagueImg{
-                    cell.leagueImg.sd_setImage(with: URL(string:favorites[indexPath.row].strBadge!), placeholderImage: UIImage(named: "placeholde"))
-                    
-                    cell.leagueImg.layer.cornerRadius = cell.leagueImg.frame.width / 2
-                    cell.leagueImg.clipsToBounds = true
-                }
-                
-                if(favorites[indexPath.row].strYoutube!==nil || favorites[indexPath.row].strYoutube!=="" ){
-                           cell.youtubeBtn.isHidden=true
-                       }else{
-                           cell.youtubeBtn.isHidden=false
-                       }
-                       
-                       cell.youtubeStr=favorites[indexPath.row].strYoutube!
-        }*/
-        
-        
-
-        
-        //cell.leagueImg.image = UIImage(named: "image.jpg")
         
         return cell
         
+    }
+    
+    
+
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        leagueObj=filteredLeague[indexPath.row]
+        print("didselect"+(leagueObj?.idLeague)!)
+        return indexPath
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc : LeagueEventsViewController = segue.destination as! LeagueEventsViewController
+        vc.leagueObj = self.leagueObj
+        print("prepatre"+(leagueObj?.idLeague)!)
     }
     
     

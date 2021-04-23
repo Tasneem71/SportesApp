@@ -24,6 +24,10 @@ class TeamDetailsViewController: UIViewController {
     @IBOutlet weak var countryLbl: UILabel!
     
     @IBOutlet weak var descTextView: UITextView!
+    
+    
+    var team:Teams?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -33,8 +37,24 @@ class TeamDetailsViewController: UIViewController {
         teamImgView.layer.borderColor = UIColor.black.cgColor
         teamImgView.layer.cornerRadius = teamImgView.frame.height/2
         teamImgView.clipsToBounds = true
+        teamImgView.sd_setImage(with: URL(string:(team?.strTeamBadge)!), placeholderImage: UIImage(named: "placeholde"))
+        
+        
+        if let image = team?.strStadiumThumb  {
+            
+            teamBackgroundImgView.sd_setImage(with: URL(string:(team?.strStadiumThumb)!), placeholderImage: UIImage(named: "placeholde"))
+        }
+        
+        
 
         // Do any additional setup after loading the view.
+        
+        leagueLbl.text=team?.strLeague
+        teamNameLbl.text=team?.strTeam
+        stadiumLbl.text=team?.strStadium
+        countryLbl.text=team?.strCountry
+        descTextView.text=team?.strDescriptionEN
+        
     }
     
 
