@@ -15,7 +15,8 @@ class FavoriteTableViewController: UITableViewController {
     
     var favorites:[NSManagedObject]!
     var favoritesCD:[NSManagedObject]!
-
+    var leagueObj:Countrys!
+    var idLeague=""
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,6 +29,10 @@ class FavoriteTableViewController: UITableViewController {
         
         
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getFromDB()
     }
 
     // MARK: - Table view data source
@@ -75,7 +80,20 @@ class FavoriteTableViewController: UITableViewController {
         
     }
     
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        idLeague = (favorites[indexPath.row].value(forKey: "idLeague") as! String?)!
+        
+        return indexPath
+    }
+    
 
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc : LeagueEventsViewController = segue.destination as! LeagueEventsViewController
+        vc.isFavorite=true
+        vc.idLeague = self.idLeague
+    }
     
 
             

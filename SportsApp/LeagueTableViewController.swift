@@ -105,6 +105,7 @@ class LeagueTableViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc : LeagueEventsViewController = segue.destination as! LeagueEventsViewController
+        vc.isFavorite=false
         vc.leagueObj = self.leagueObj
         print("prepatre"+(leagueObj?.idLeague)!)
     }

@@ -26,6 +26,8 @@ class LeagueEventsViewController: UIViewController {
     let leagueEventsViewModel = LeagueEventsViewModel()
 
     var leagueObj:Countrys?
+    var isFavorite=false
+    var idLeague=""
     
     var teamDetails:Teams?
     var managedContext : NSManagedObjectContext!
@@ -42,7 +44,7 @@ class LeagueEventsViewController: UIViewController {
         let screenRect = UIScreen.main.bounds
         let screenWidth = screenRect.size.width
         let screenHeight = screenRect.size.height
-        self.scrollView.contentSize = CGSize(width: screenWidth, height: 970)
+        self.scrollView.contentSize = CGSize(width: screenWidth, height: 1000)
         self.scrollView.frame = CGRect(x: 0, y: 70, width: screenWidth, height: screenHeight)
         scrollView.backgroundColor = UIColor.clear
         
@@ -54,11 +56,15 @@ class LeagueEventsViewController: UIViewController {
         
         print(leagueObj?.idLeague)
         
-        
+        if isFavorite {
+            leagueEventsViewModel.fetchTeamsDataFromAPI(leagueID: (idLeague))
+            leagueEventsViewModel.fetchLastEventsDataFromAPI(leagueID: (idLeague))
+            leagueEventsViewModel.fetchUpcommingEventsDataFromAPI(leagueID: (idLeague))
+        }else{
         leagueEventsViewModel.fetchTeamsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
         leagueEventsViewModel.fetchLastEventsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
         leagueEventsViewModel.fetchUpcommingEventsDataFromAPI(leagueID: (leagueObj?.idLeague)!)
-        
+        }
         
         leagueEventsViewModel.bindUpcommingEventsViewModelToView = {
                     
