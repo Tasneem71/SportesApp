@@ -106,7 +106,8 @@ class FavoriteTableViewController: UITableViewController {
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
      
        //  onFailUpdateView()
-       if NetworkMonitor.shared.isConnected{
+        
+        if Connectivity.isConnectedToInternet{
         print("network exists")
             return true
         }else{
@@ -116,6 +117,7 @@ class FavoriteTableViewController: UITableViewController {
 
            return false
         }
+        
         
         
        }

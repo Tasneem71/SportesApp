@@ -47,7 +47,7 @@ class LeagueEventsViewController: UIViewController {
         let screenRect = UIScreen.main.bounds
         let screenWidth = screenRect.size.width
         let screenHeight = screenRect.size.height
-        self.scrollView.contentSize = CGSize(width: screenWidth, height: 1000)
+        self.scrollView.contentSize = CGSize(width: screenWidth, height: 1010)
         self.scrollView.frame = CGRect(x: 0, y: 70, width: screenWidth, height: screenHeight)
         scrollView.backgroundColor = UIColor.clear
         
