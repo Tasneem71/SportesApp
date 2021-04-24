@@ -13,10 +13,12 @@ import Alamofire
 class FavoriteTableViewController: UITableViewController {
     var managedContext : NSManagedObjectContext!
     
-    var favorites:[NSManagedObject]!
+    var favorites:[NSManagedObject]=[NSManagedObject]()
     var favoritesCD:[NSManagedObject]!
     var leagueObj:Countrys!
     var idLeague=""
+    var fdb:FavoriteDataBase!
+    let favoriteViewModel=FavoriteViewModel()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,16 +26,54 @@ class FavoriteTableViewController: UITableViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
                        
         managedContext = appDelegate.persistentContainer.viewContext
+        favoriteViewModel.fetchAllLeaguesDataFromAPI()
+        //fdb=FavoriteDataBase()
+        //favorites=fdb.readData()
+        //tableView.reloadData()
+        //getFromDB()
         
-        getFromDB()
+        favoriteViewModel.bindFavoritsViewModelToView = {
+                    
+            self.onAllSportsSuccessUpdateView()
+            
+        }
         
         
+        favoriteViewModel.bindViewModelErrorToView = {
+                    
+            self.onFailUpdateView1()
+            
+        }
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        getFromDB()
+        //getFromDB()
+        favoriteViewModel.fetchAllLeaguesDataFromAPI()
     }
+    
+    func onAllSportsSuccessUpdateView(){
+        
+        
+        favorites = favoriteViewModel.favorits
+        self.tableView.reloadData()
+        
+    }
+    
+    
+    
+    func onFailUpdateView1(){
+        
+       
+        let alert = UIAlertController(title: "Error", message: favoriteViewModel.showError, preferredStyle: .alert)
+        
+        let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
+        
+        }
+        alert.addAction(okAction)
+             self.present(alert, animated: true, completion: nil)
+    }
+    
 
     // MARK: - Table view data source
 
@@ -44,6 +84,8 @@ class FavoriteTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        
+        
         return favorites.count
     }
     
@@ -98,6 +140,14 @@ class FavoriteTableViewController: UITableViewController {
        }
 
     
+    
+   
+    
+    
+    
+    
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc : LeagueEventsViewController = segue.destination as! LeagueEventsViewController
         vc.isFavorite=true
@@ -118,23 +168,40 @@ class FavoriteTableViewController: UITableViewController {
            return false
         }
         
-        
-        
        }
+    func onFailUpdateView(){
+        
+       
+        let alert = UIAlertController(title: "Alert", message: "No Internet Connection", preferredStyle: .alert)
+        
+        let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
+            
+        }
+     alert.addAction(okAction)
+          self.present(alert, animated: true, completion: nil)
+    }
     
-            func getFromDB() {
-                let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
-                
-                    do{
-                        self.favorites = try self.managedContext.fetch(fetch)
-                     print("fetch")
-                     
-                     
-                    }catch {
-                      print("un fetch")
-                    }
-                    self.tableView.reloadData()
+    
+    
+ 
+    
+    
+    
+    
+    
+    func getFromDB() {
+        let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
+        
+            do{
+                self.favorites = try self.managedContext.fetch(fetch)
+             print("fetch")
+             
+             
+            }catch {
+              print("un fetch")
             }
+            self.tableView.reloadData()
+    }
     
     
     func removeFromDB(obj:NSManagedObject) {
@@ -159,31 +226,6 @@ class FavoriteTableViewController: UITableViewController {
                            }
           
     }
-    func onFailUpdateView(){
-           
-          
-           let alert = UIAlertController(title: "Alert", message: "No Internet Connection", preferredStyle: .alert)
-           
-           let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
-               
-           }
-        alert.addAction(okAction)
-             self.present(alert, animated: true, completion: nil)
-       }
-    
-    
-    
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-    
     
 
 
