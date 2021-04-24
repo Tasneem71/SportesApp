@@ -98,11 +98,7 @@ class LeagueEventsViewController: UIViewController {
             self.onFailUpdateView()
             
         }
-      
-
-
-
-    
+ 
     }
     
    override func viewWillAppear(_ animated: Bool) {
@@ -158,9 +154,10 @@ class LeagueEventsViewController: UIViewController {
         let alert = UIAlertController(title: "Error", message: leagueEventsViewModel.showError, preferredStyle: .alert)
         
         let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
-            
-            
+        
         }
+        alert.addAction(okAction)
+             self.present(alert, animated: true, completion: nil)
     }
     
     

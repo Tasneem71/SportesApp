@@ -105,6 +105,7 @@ class FavoriteTableViewController: UITableViewController {
     }
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
      
+       //  onFailUpdateView()
        if NetworkMonitor.shared.isConnected{
         print("network exists")
             return true
@@ -163,8 +164,9 @@ class FavoriteTableViewController: UITableViewController {
            
            let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
                
-               
            }
+        alert.addAction(okAction)
+             self.present(alert, animated: true, completion: nil)
        }
     
     
