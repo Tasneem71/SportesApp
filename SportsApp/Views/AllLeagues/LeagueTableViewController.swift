@@ -18,17 +18,54 @@ class LeagueTableViewController: UITableViewController {
     var filteredLeague=[Countrys]()
     
     var leagueObj:Countrys?
+    var leaguesViewModel=LeaguesViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title=""
-        self.getLeaguesFromApi(sport: sportName)
-        
+        //self.getLeaguesFromApi(sport: sportName)
+        leaguesViewModel.fetchAllLeaguesDataFromAPI(sportType: sportName)
         searchBar.delegate=self
         
         
-
+        leaguesViewModel.bindLeaguesViewModelToView = {
+                    
+            self.onAleaguesSuccessUpdateView()
+            
+        }
         
+        
+        leaguesViewModel.bindViewModelErrorToView = {
+                    
+            self.onFailUpdateView()
+            
+        }
+    
+        
+    }
+    
+    
+    func onAleaguesSuccessUpdateView(){
+        
+        print("on success")
+        favorites = leaguesViewModel.leagues.countrys!
+        self.filteredLeague=self.favorites
+        self.tableView.reloadData()
+        
+    }
+    
+    
+    
+    func onFailUpdateView(){
+        
+       
+        let alert = UIAlertController(title: "Error", message: leaguesViewModel.showError, preferredStyle: .alert)
+        
+        let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
+        
+        }
+        alert.addAction(okAction)
+             self.present(alert, animated: true, completion: nil)
     }
 
     // MARK: - Table view data source

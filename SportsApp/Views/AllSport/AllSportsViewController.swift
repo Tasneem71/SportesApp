@@ -12,23 +12,71 @@ import SDWebImage
 class AllSportsViewController: UIViewController {
     
     var sports=[Sport]()
+    
+    let allSportsViewModel = AllSportsViewModel()
 
     @IBOutlet weak var sportsCollectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title="Sports:"
-        getSportsFromApi()
 
         // Do any additional setup after loading the view.
         sportsCollectionView.dataSource = self
         sportsCollectionView.delegate = self
+        
+        
+        allSportsViewModel.bindAllSportsViewModelToView = {
+                    
+            self.onAllSportsSuccessUpdateView()
+            
+        }
+        
+        
+        allSportsViewModel.bindViewModelErrorToView = {
+                    
+            self.onFailUpdateView()
+            
+        }
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.title="Sports:"
     }
     
+    
+    func onAllSportsSuccessUpdateView(){
+        
+        
+        sports = allSportsViewModel.allSports.sports
+        self.sportsCollectionView.reloadData()
+        
+    }
+    
+    
+    
+    func onFailUpdateView(){
+        
+       
+        let alert = UIAlertController(title: "Error", message: allSportsViewModel.showError, preferredStyle: .alert)
+        
+        let okAction  = UIAlertAction(title: "Ok", style: .default) { (UIAlertAction) in
+        
+        }
+        alert.addAction(okAction)
+             self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
 }
+
+
+
+
+
+
 
 extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -70,28 +118,28 @@ extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewD
     
     
     
-    func getSportsFromApi() {
-        
-        SportsApiServies.instance.getSports(url:URLs.getSportsURL)  { (sports, error) in
-        if let myError = error{
-            print(myError)
-        }else{
-            guard let sports = sports else {
-                return
-            }
-            self.sports=sports.sports
-            
-            DispatchQueue.main.async {
-             self.sportsCollectionView.reloadData()
-            }
-         
-            for item in self.sports{
-                print(item.strSport)}
-            }
-            
-        }
-        
-    }
+//    func getSportsFromApi() {
+//
+//        SportsApiServies.instance.getSports(url:URLs.getSportsURL)  { (sports, error) in
+//        if let myError = error{
+//            print(myError)
+//        }else{
+//            guard let sports = sports else {
+//                return
+//            }
+//            self.sports=sports.sports
+//
+//            DispatchQueue.main.async {
+//             self.sportsCollectionView.reloadData()
+//            }
+//
+//            for item in self.sports{
+//                print(item.strSport)}
+//            }
+//
+//        }
+//
+//    }
     
     
     

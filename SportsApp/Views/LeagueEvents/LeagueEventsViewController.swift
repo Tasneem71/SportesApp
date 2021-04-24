@@ -2,9 +2,9 @@
 //  LeagueEventsViewController.swift
 //  SportsApp
 //
-//  Created by tasneem on 21/04/2021.
+//  Created by tasneem on 4/19/21.
+//  Copyright © 2021 tasneem. All rights reserved.
 //
-
 import UIKit
 
 import CoreData
