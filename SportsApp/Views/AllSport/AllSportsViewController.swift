@@ -19,6 +19,8 @@ class AllSportsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title="Sports:"
+        sportsCollectionView.layer.cornerRadius=15
+        sportsCollectionView.layer.masksToBounds=true
 
         // Do any additional setup after loading the view.
         sportsCollectionView.dataSource = self
@@ -93,6 +95,9 @@ extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewD
         cell.sportImgView.translatesAutoresizingMaskIntoConstraints=false
         cell.sportImgView.sd_setImage(with: URL(string:sports[indexPath.row].strSportThumb), placeholderImage: UIImage(named: "placeholde"))
         
+        cell.sportImgView.layer.cornerRadius=15
+        cell.sportImgView.layer.masksToBounds=true
+        
         
         
         
@@ -114,7 +119,7 @@ extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewD
     
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 1
     }
     
     

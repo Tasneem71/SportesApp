@@ -102,6 +102,7 @@ class LeagueEventsViewController: UIViewController {
     }
     
    override func viewWillAppear(_ animated: Bool) {
+    
     if isFavorite {
              
         favoriteBtn.tintColor = UIColor.red
@@ -110,7 +111,7 @@ class LeagueEventsViewController: UIViewController {
          
               
               getFromDB(id: (leagueObj?.idLeague)!)
-              
+        
           }
            
        }
@@ -165,11 +166,50 @@ class LeagueEventsViewController: UIViewController {
         if isFavorite == false && isInCD == false {
             addToFavorite(leagueItem: leagueObj!)
             favoriteBtn.tintColor=UIColor.red
+        }else{
+            if isFavorite==true{
+                
+                removeFromDB(id: idLeague)
+                
+            }else{
+                removeFromDB(id: (leagueObj?.idLeague)!)
+            }
         }
         
     }
     
-   
+    
+    func removeFromDB(id:String) {
+        
+        
+//        let entity = NSEntityDescription.entity(forEntityName: "Favorite", in: managedContext)
+//            let favoriteItem = NSManagedObject(entity: entity!, insertInto: managedContext)
+//        favoriteItem.setValue(leagueItem.idLeague!, forKey: "idLeague")
+//        favoriteItem.setValue(leagueItem.strLeague!, forKey: "strLeague")
+//            favoriteItem.setValue(leagueItem.strBadge!, forKey: "strBadge")
+//            favoriteItem.setValue(leagueItem.strYoutube!, forKey: "strYoutube")
+          
+           let fetch = NSFetchRequest<NSManagedObject>(entityName: "Favorite")
+                          
+               do{
+                var favorites = try self.managedContext.fetch(fetch)
+                       print("fetch")
+                               
+                   for item in favorites {
+                    if item.value(forKey: "idLeague") as! String? == id  {
+                       managedContext.delete(item)
+                        favoriteBtn.tintColor=UIColor.blue
+                       }
+                       
+                   }
+                  try  managedContext.save()
+                               
+                              }catch {
+                                print("un fetch")
+                              }
+             
+    
+    }
     
     
         func addToFavorite(leagueItem:Countrys) {
@@ -294,15 +334,23 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
             
             
             cell.imageView1.sd_setImage(with: URL(string:pics[0]), placeholderImage: UIImage(named: "placeholde"))
-            cell.view1.layer.cornerRadius = 20.0
+            //cell.view1.layer.cornerRadius = 20.0
+            //cell.view1.layer.masksToBounds=true
             cell.imageView2.sd_setImage(with: URL(string:pics[1]), placeholderImage: UIImage(named: "placeholde"))
-            cell.view2.layer.cornerRadius = 20.0
+            //cell.view2.layer.cornerRadius = 20.0
+            //cell.view1.layer.masksToBounds=true
             cell.dateLabeel.text=upcommingEvents[indexPath.row].dateEvent
             
             cell.homeTeamLabel.text=upcommingEvents[indexPath.row].strHomeTeam
             cell.awayTeamLabel.text=upcommingEvents[indexPath.row].strAwayTeam
             cell.eventLabel.text=upcommingEvents[indexPath.row].strEvent
             
+            cell.layer.cornerRadius=15
+            cell.layer.masksToBounds=true
+            cell.imageView1.layer.cornerRadius=15
+            cell.imageView1.layer.masksToBounds=true
+            cell.imageView2.layer.cornerRadius=15
+            cell.imageView2.layer.masksToBounds=true
             
             return cell
         }else{
