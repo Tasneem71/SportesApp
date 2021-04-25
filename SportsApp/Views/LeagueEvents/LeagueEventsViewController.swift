@@ -385,7 +385,7 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc : TeamDetailsViewController = segue.destination as! TeamDetailsViewController
+        let vc : TeamDetailsTableViewController = segue.destination as! TeamDetailsTableViewController
         vc.team = self.teamDetails
         //print("prepatre"+(leagueObj?.idLeague)!)
     }
