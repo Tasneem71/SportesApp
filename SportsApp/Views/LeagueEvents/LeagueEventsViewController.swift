@@ -118,7 +118,9 @@ class LeagueEventsViewController: UIViewController {
     
     func onLastEventSuccessUpdateView(){
         
+        if let events = leagueEventsViewModel.lastEvents.events{
         lastEvents = leagueEventsViewModel.lastEvents.events!
+        }
         self.lastEventsTableView.reloadData()
         
     }
