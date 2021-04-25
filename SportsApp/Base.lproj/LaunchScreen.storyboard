@@ -19,8 +19,23 @@
                                 <rect key="frame" x="131" y="302" width="152" height="228"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sports App" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g4y-41-QP9">
+                                <rect key="frame" x="124" y="507" width="167" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="GKv-9C-Klz"/>
+                                    <constraint firstAttribute="width" constant="167" id="wa4-3d-ulT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="g4y-41-QP9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="124" id="47e-66-ltJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="g4y-41-QP9" secondAttribute="trailing" constant="123" id="gDv-7t-Etl"/>
+                            <constraint firstItem="g4y-41-QP9" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="463" id="nfa-yP-FJr"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
