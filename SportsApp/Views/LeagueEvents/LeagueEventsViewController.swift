@@ -165,16 +165,19 @@ class LeagueEventsViewController: UIViewController {
     
     
     @IBAction func favoriteBtn(_ sender: Any) {
-        if isFavorite == false && isInCD == false {
+        if isFavorite == false && isInCD == false && favoriteBtn.tintColor != UIColor.red {
             addToFavorite(leagueItem: leagueObj!)
             favoriteBtn.tintColor=UIColor.red
-        }else{
+        }else if favoriteBtn.tintColor==UIColor.red{
             if isFavorite==true{
                 
                 removeFromDB(id: idLeague)
+                isFavorite=false
+                favoriteBtn.isHidden=true
                 
             }else{
                 removeFromDB(id: (leagueObj?.idLeague)!)
+                isInCD=false
             }
         }
         
@@ -216,7 +219,7 @@ class LeagueEventsViewController: UIViewController {
     
         func addToFavorite(leagueItem:Countrys) {
             
-            
+           
             let entity = NSEntityDescription.entity(forEntityName: "Favorite", in: managedContext)
                 let favoriteItem = NSManagedObject(entity: entity!, insertInto: managedContext)
             favoriteItem.setValue(leagueItem.idLeague!, forKey: "idLeague")
@@ -225,6 +228,7 @@ class LeagueEventsViewController: UIViewController {
                 favoriteItem.setValue(leagueItem.strYoutube!, forKey: "strYoutube")
                 do{
                     try managedContext.save()
+                    isInCD=true
                 }catch let error as NSError{
                     print(error)
                 }
