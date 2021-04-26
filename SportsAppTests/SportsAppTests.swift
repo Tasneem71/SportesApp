@@ -11,8 +11,20 @@ import XCTest
 
 class SportsAppTests: XCTestCase {
 
+    var realObjService : SportsApiServies!
+//    var realLeaguesService : SportsApiServies!
+//    var reallasteventsService : SportsApiServies!
+
+    var mockSportsService:MockingSportsService!
+    
+    
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        realObjService = SportsApiServies()
+    //    realLeaguesService = SportsApiServies()
+
+        mockSportsService = MockingSportsService(shouldReturnError: false)
+        
     }
 
     override func tearDown() {
@@ -30,5 +42,70 @@ class SportsAppTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+//    func testMockSportsService(){
+//        mockSportsService.getSports(url: ""){ (sports, error) in
+//        if let error = error{
+//            XCTFail()
+//        }else{
+//            XCTAssertGreaterThan(sports!.count, 2)
+//        }
+//        }
+//    }
+    func testRealSports(){
+        let expect = expectation(description: "expecting")
+        realObjService.getSports(url: "https://www.thesportsdb.com/api/v1/json/1/all_sports.php") { (sports, error) in
+            if let error = error{
+                XCTFail()
+            }else{
+                expect.fulfill()
+                XCTAssertEqual(sports?.sports.count, 2)
+               
+            }
+        }
+        waitForExpectations(timeout: 3, handler: nil)
+    }
 
+    func testRealLeagues(){
+        let expect = expectation(description: "expecting")
+        realObjService.getCountries(url: "https://www.thesportsdb.com/api/v1/json/1/search_all_leagues.php?s=soccer") { (leagues, error) in
+            if let error = error{
+                XCTFail()
+            }else{
+                expect.fulfill()
+                XCTAssertEqual(leagues?.countrys?.count, 50)
+               
+            }
+        }
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+
+   func testRealLastEvent(){
+       let expect = expectation(description: "expecting")
+       realObjService.getEvents(url: "https://www.thesportsdb.com/api/v1/json/1/eventspastleague.php?id="
+       ) { (events, error) in
+           if let error = error{
+               XCTFail()
+           }else{
+               expect.fulfill()
+         //   XCTAssertEqual(events.i, 50)
+              
+           }
+       }
+       waitForExpectations(timeout: 3, handler: nil)
+   }
+//    func testRealTeams(){
+//        let expect = expectation(description: "expecting")
+//        realObjService.geTeams(url: "https://www.thesportsdb.com/api/v1/json/1/lookup_all_teams.php?id="
+//        ) { (teams, error) in
+//            if let error = error{
+//                XCTFail()
+//            }else{
+//                expect.fulfill()
+//                XCTAssertEqual(teams.count, 50)
+//               
+//            }
+//        }
+//        waitForExpectations(timeout: 3, handler: nil)
+//    }
+//    
 }

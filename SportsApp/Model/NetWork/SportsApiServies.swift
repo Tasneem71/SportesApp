@@ -7,10 +7,8 @@
 //
 
 import Foundation
-
-
 import Alamofire
-class SportsApiServies{
+class SportsApiServies : SportsProtocol{
     
     
     //singletone
@@ -137,9 +135,6 @@ class SportsApiServies{
         }
     }
     
-    
-    
-    
-    
+
     
 }

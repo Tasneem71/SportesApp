@@ -703,7 +703,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Klu-5z-cnD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3008.6956521739135" y="551.11607142857144"/>
+            <point key="canvasLocation" x="3026" y="513"/>
         </scene>
         <!--League Events View Controller-->
         <scene sceneID="t1T-pg-Xx5">
