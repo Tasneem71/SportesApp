@@ -81,31 +81,33 @@ class SportsAppTests: XCTestCase {
 
    func testRealLastEvent(){
        let expect = expectation(description: "expecting")
-       realObjService.getEvents(url: "https://www.thesportsdb.com/api/v1/json/1/eventspastleague.php?id="
+       realObjService.getEvents(url: "https://www.thesportsdb.com/api/v1/json/1/eventspastleague.php?id=4328"
        ) { (events, error) in
            if let error = error{
                XCTFail()
            }else{
                expect.fulfill()
-         //   XCTAssertEqual(events.i, 50)
+            XCTAssertEqual(events?.events?.count, 15)
               
            }
        }
        waitForExpectations(timeout: 3, handler: nil)
    }
-//    func testRealTeams(){
-//        let expect = expectation(description: "expecting")
-//        realObjService.geTeams(url: "https://www.thesportsdb.com/api/v1/json/1/lookup_all_teams.php?id="
-//        ) { (teams, error) in
-//            if let error = error{
-//                XCTFail()
-//            }else{
-//                expect.fulfill()
-//                XCTAssertEqual(teams.count, 50)
-//               
-//            }
-//        }
-//        waitForExpectations(timeout: 3, handler: nil)
-//    }
-//    
+    
+    
+    func testRealTeams(){
+        let expect = expectation(description: "expecting")
+        realObjService.getTeams(url: "https://www.thesportsdb.com/api/v1/json/1/lookup_all_teams.php?id=4328&r=10&s=2020-2021"
+        ) { (teams, error) in
+            if let error = error{
+                XCTFail()
+            }else{
+                expect.fulfill()
+                XCTAssertEqual(teams?.teams?.count, 20)
+               
+            }
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
 }
