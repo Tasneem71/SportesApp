@@ -321,9 +321,9 @@
 			children = (
 				961D4C4A263200D700400991 /* LastUpcommingEvents.swift */,
 				961D4C4B263200D700400991 /* Events.swift */,
-				961D4C512632274400400991 /* Teams.swift */,
 				96D52F682630CD4100DFF9AE /* SportObj.swift */,
 				96E4BA56262FA5B200104A79 /* Countrys.swift */,
+				961D4C512632274400400991 /* Teams.swift */,
 				96E4BA57262FA5B300104A79 /* Json4Swift_Base.swift */,
 				961D4C502632274400400991 /* LeagueTeams.swift */,
 			);

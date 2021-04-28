@@ -289,14 +289,16 @@ extension LeagueEventsViewController : UITableViewDelegate , UITableViewDataSour
             cell.imageView1.sd_setImage(with: URL(string:pics[0]), placeholderImage: UIImage(named: "placeholde"))
             
              cell.imageViw2.sd_setImage(with: URL(string:pics[1]), placeholderImage: UIImage(named: "placeholde"))
+            cell.layer.cornerRadius=15
+            cell.layer.masksToBounds=true
         }
         
         
         
         
-        cell.view1.layer.cornerRadius = 20.0
+        cell.view1.layer.cornerRadius = 15.0
        
-        cell.view2.layer.cornerRadius = 20.0
+        cell.view2.layer.cornerRadius = 15.0
         cell.dateLabelView.text=lastEvents[indexPath.row].dateEvent
         cell.homeTeamLabel.text=lastEvents[indexPath.row].strHomeTeam
         cell.awayTeamLabel.text=lastEvents[indexPath.row].strAwayTeam
@@ -357,10 +359,14 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
             cell.imageView1.layer.masksToBounds=true
             cell.imageView2.layer.cornerRadius=15
             cell.imageView2.layer.masksToBounds=true
+            cell.view1.layer.cornerRadius = 15.0
+            
+             cell.view2.layer.cornerRadius = 15.0
             
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellh2", for: indexPath as IndexPath) as! TeamsCollectionViewCell
+            cell.nameLabel.text=leagueTeams[indexPath.row].strTeam
             cell.teamImageViw.sd_setImage(with: URL(string:leagueTeams[indexPath.row].strTeamBadge!), placeholderImage: UIImage(named: "placeholde"))
             cell.teamImageViw.layer.cornerRadius = cell.teamImageViw.frame.width / 2
             cell.teamImageViw.clipsToBounds = true
@@ -376,7 +382,7 @@ extension LeagueEventsViewController : UICollectionViewDelegate, UICollectionVie
         if collectionView == upcommingCollectionView {
             return CGSize(width: 300, height: 180)
         }else{
-            return CGSize(width: 185, height: 144)
+            return CGSize(width: 150, height: 144)
         }
     
     
