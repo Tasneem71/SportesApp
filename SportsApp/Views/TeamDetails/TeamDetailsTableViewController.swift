@@ -31,9 +31,9 @@ class TeamDetailsTableViewController: UITableViewController {
         super.viewDidLoad()
 
         
-        teamImgView.layer.borderWidth = 1
-        teamImgView.layer.masksToBounds = false
-        teamImgView.layer.borderColor = UIColor.black.cgColor
+//        teamImgView.layer.borderWidth = 1
+//        teamImgView.layer.masksToBounds = false
+//        teamImgView.layer.borderColor = UIColor.black.cgColor
         teamImgView.layer.cornerRadius = teamImgView.frame.height/2
         teamImgView.clipsToBounds = true
         teamImgView.sd_setImage(with: URL(string:(team?.strTeamBadge)!), placeholderImage: UIImage(named: "placeholde"))

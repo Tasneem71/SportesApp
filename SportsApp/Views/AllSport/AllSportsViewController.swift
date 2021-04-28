@@ -11,6 +11,7 @@ import SDWebImage
 
 class AllSportsViewController: UIViewController {
     
+    @IBOutlet weak var sportIndicator: UIActivityIndicatorView!
     var sports=[Sport]()
     
     let allSportsViewModel = AllSportsViewModel()
@@ -18,7 +19,9 @@ class AllSportsViewController: UIViewController {
     @IBOutlet weak var sportsCollectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title="Sports:"
+//        sportIndicator.startAnimating()
+
+        self.navigationItem.title="Sports"
         sportsCollectionView.layer.cornerRadius=15
         sportsCollectionView.layer.masksToBounds=true
 
@@ -26,17 +29,17 @@ class AllSportsViewController: UIViewController {
         sportsCollectionView.dataSource = self
         sportsCollectionView.delegate = self
         
-        
         allSportsViewModel.bindAllSportsViewModelToView = {
                     
             self.onAllSportsSuccessUpdateView()
-            
+            self.sportIndicator.stopAnimating()
         }
         
         
         allSportsViewModel.bindViewModelErrorToView = {
                     
             self.onFailUpdateView()
+            self.sportIndicator.stopAnimating()
             
         }
         
@@ -55,8 +58,7 @@ class AllSportsViewController: UIViewController {
         self.sportsCollectionView.reloadData()
         
     }
-    
-    
+
     
     func onFailUpdateView(){
         
@@ -73,12 +75,6 @@ class AllSportsViewController: UIViewController {
     
     
 }
-
-
-
-
-
-
 
 extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
     
@@ -98,10 +94,7 @@ extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewD
         cell.sportImgView.layer.cornerRadius=15
         cell.sportImgView.layer.masksToBounds=true
         
-        
-        
-        
-        
+
         return cell
     }
     
@@ -112,10 +105,6 @@ extension AllSportsViewController: UICollectionViewDataSource, UICollectionViewD
         self.navigationItem.title=""
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
-
-    
-    
     
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

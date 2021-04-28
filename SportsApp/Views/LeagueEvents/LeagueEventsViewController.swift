@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 
 class LeagueEventsViewController: UIViewController {
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var upcommingCollectionView: UICollectionView!
     
     @IBOutlet weak var teamsCollectionView: UICollectionView!
@@ -77,18 +79,21 @@ class LeagueEventsViewController: UIViewController {
         leagueEventsViewModel.bindUpcommingEventsViewModelToView = {
                     
             self.onUpcommingEventSuccessUpdateView()
+            self.activityIndicator.stopAnimating()
             
         }
         
         leagueEventsViewModel.bindLastEventsViewModelToView = {
                     
             self.onLastEventSuccessUpdateView()
+            self.activityIndicator.stopAnimating()
             
         }
         
         leagueEventsViewModel.bindLeagueTeamsViewModelToView = {
                     
             self.onLeagueTeamsSuccessUpdateView()
+            self.activityIndicator.stopAnimating()
             
         }
         
@@ -96,6 +101,8 @@ class LeagueEventsViewController: UIViewController {
         leagueEventsViewModel.bindViewModelErrorToView = {
                     
             self.onFailUpdateView()
+            self.activityIndicator.stopAnimating()
+
             
         }
  
